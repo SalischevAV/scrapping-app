@@ -7,5 +7,5 @@ export class UserEntity extends AbstractEntity<UserEntity>{
     email: string;
 
     @Column()
-    login: string;
+    passwordHash: string;
 }

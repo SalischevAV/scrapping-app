@@ -16,10 +16,12 @@
     "baseUrl": ".",
     "strictPropertyInitialization": false,
     "paths": {
+      "@scraping-app/constants": ["libs/constants/src/index.ts"],
       "@scraping-app/database": ["libs/database/src/index.ts"],
       "@scraping-app/dtos": ["libs/dtos/src/index.ts"],
       "@scraping-app/interfaces": ["libs/interfaces/src/index.ts"],
-      "@scraping-app/models": ["libs/models/src/index.ts"]
+      "@scraping-app/models": ["libs/models/src/index.ts"],
+      "@scraping-app/nest-decorators": ["libs/nest-decorators/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
