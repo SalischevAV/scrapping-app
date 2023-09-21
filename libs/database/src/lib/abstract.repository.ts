@@ -3,8 +3,8 @@ import { AbstractEntity } from "./abstract.entity";
 import { DeleteResult, EntityManager, FindOptionsWhere, Repository } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
-export class AbstractRepository<T extends AbstractEntity<T>> {
-    protected readonly logger: Logger;
+export abstract class AbstractRepository<T extends AbstractEntity<T>> {
+    protected abstract readonly logger: Logger;
 
     constructor(
         private readonly entityRepository: Repository<T>,
@@ -25,6 +25,7 @@ export class AbstractRepository<T extends AbstractEntity<T>> {
 
         return entity;
     }
+
 
     async findOneAndUpdate(
         where: FindOptionsWhere<T>,

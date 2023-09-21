@@ -1,1 +1,1 @@
-export * from './lib/dtos.module';
+export * from './lib/user';
