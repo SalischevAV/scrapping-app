@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UserEntity } from '@scraping-app/models';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { TokenPayload } from '@scraping-app/interfaces';
 
 @Injectable()
 export class AppService {
@@ -12,7 +13,7 @@ export class AppService {
   ){}
 
   login(user: UserEntity, response: Response) {
-    const tokenPayload = {
+    const tokenPayload: TokenPayload = {
       userId: user.id
     }
 
