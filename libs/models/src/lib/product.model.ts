@@ -4,17 +4,20 @@ import { Column, Entity } from "typeorm";
 @Entity()
 export class ProductEntity extends AbstractEntity<ProductEntity>{
     @Column()
-    name: string;
+    title: string;
 
     @Column()
-    picture: string;
+    picture?: string;
 
     @Column()
-    description: string;
+    description?: string;
 
     @Column()
     price: number;
 
     @Column()
-    createDate: Date;
+    createDate?: Date;
+
+    @Column()
+    url: string;
 }

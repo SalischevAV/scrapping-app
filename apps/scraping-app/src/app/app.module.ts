@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { ScrapingModule } from './scraping/scraping.module';
 
 @Module({
   imports: [
@@ -10,8 +8,9 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: 'envs/.scrap.env',
     }),
+    ScrapingModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
