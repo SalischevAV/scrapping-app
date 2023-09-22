@@ -8,7 +8,7 @@ export class ScrapingService {
     private readonly logger = new Logger(ScrapingService.name);
     constructor(private readonly configService: ConfigService){}
 
-    async getProducts(productQuery: string, url = 'https://amazon.com'): Promise<ProductCard[]> {
+    async getProducts(productQuery: string, url = 'https://amazon.com', userId: number): Promise<ProductCard[]> {
        const browser = await puppeteer.connect({
             browserWSEndpoint: this.configService.getOrThrow('SBR_WS_ENDPOINT')
        });
@@ -24,7 +24,7 @@ export class ScrapingService {
             page.waitForNavigation(),
             page.click('#nav-search-submit-button'),
         ]);
-        return await page.$$eval(
+        const result = await page.$$eval(
             '.s-search-results .s-card-container',
             (resultItems) => {
               return resultItems.map((resultItem) => {
@@ -47,12 +47,17 @@ export class ScrapingService {
               });
             },
           );
+          this.saveResult(userId);
+          return result;
        } catch (error) {
         this.logger.error(error);
         throw new NotFoundException(error);
        }finally {
         await browser.close();
        }
+    }
+    saveResult(userId: number) {
+      console.log(userId);
     }
 
     getResults(productQuery: string, url: string) {

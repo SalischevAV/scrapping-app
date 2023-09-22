@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScrapingModule } from './scraping/scraping.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AuthAuthorize } from '@scraping-app/libs/contracts';
 
 @Module({
   imports: [
@@ -9,6 +11,19 @@ import { ScrapingModule } from './scraping/scraping.module';
       envFilePath: 'envs/.scrap.env',
     }),
     ScrapingModule,
+    // ClientsModule.registerAsync([
+    //   {
+    //     name: AuthAuthorize.injectionToken,
+    //     useFactory: (configService: ConfigService) =>({
+    //       transport: Transport.RMQ,
+    //       options: {
+    //         urls: [configService.getOrThrow<string>('RMQ_HOST')],
+    //         queue: AuthAuthorize.queue,
+    //       }
+    //     }),
+    //     inject: [ConfigService],
+    //   }
+    // ])
   ],
   controllers: [],
   providers: [],
