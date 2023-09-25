@@ -6,17 +6,22 @@ import { TokenPayload } from "@scraping-app/interfaces";
 import { UserEntity } from "@scraping-app/models";
 
 @Injectable()
-export class CommonJwtAuthGuard implements CanActivate{
-    constructor(@Inject(AuthAuthorize.injectionToken) private readonly authClient: ClientProxy){}
+export class CommonJwtAuthGuard implements CanActivate {
+    constructor(@Inject(AuthAuthorize.injectionToken) private readonly authClient: ClientProxy) { }
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        const jwt: TokenPayload = context.switchToHttp().getRequest().cookies?.Authentication;
-        if(!jwt){
+        const request = context.switchToHttp().getRequest();
+        const tokenFromRawHeaders: string = request.rawHeaders.find((rawHeader: string) => rawHeader.includes('Bearer')).split(' ')[1]
+        const jwt: TokenPayload = tokenFromRawHeaders
+            || request.cookies?.Authorization
+            || request.Authorization
+            || request.headers?.Authorization
+        if (!jwt) {
             return false;
         }
 
         return this.authClient
-            .send<UserEntity>(AuthAuthorize.topic, { Authentication: jwt})
+            .send<UserEntity>(AuthAuthorize.topic, { Authorization: jwt })
             .pipe(
                 tap((res) => {
                     context.switchToHttp().getRequest().user = res;

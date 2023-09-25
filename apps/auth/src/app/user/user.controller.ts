@@ -4,13 +4,15 @@ import { UserService } from './user.service';
 import { CurrentUser } from '@scraping-app/nest-decorators';
 import { UserEntity } from '@scraping-app/models';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { AuthRegister } from '@scraping-app/libs/contracts';
 
 @Controller('')
 export class UserController {
     constructor(private readonly userService: UserService){}
 
-    @Post('user')
-    async createUser(@Body() createUserDto: CreateUserDto){
+    @MessagePattern(AuthRegister.topic)
+    async createUser(@Payload() createUserDto: CreateUserDto){
         return this.userService.createUser(createUserDto);
     }
 

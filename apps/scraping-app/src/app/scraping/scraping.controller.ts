@@ -16,7 +16,7 @@ export class ScrapingController {
 
     @Get('results')
     @UseGuards(CommonJwtAuthGuard)
-    getResults(@Query('productQuery') productQuery: string, @Query('url' )url: string){
+    getResults(@Query('productQuery') productQuery: string, @Query('url')url: string){
         return this.scrapingService.getResults(productQuery, url);
     }
 }

@@ -13,6 +13,7 @@ export class AppService {
   ){}
 
   login(user: UserEntity, response: Response) {
+    console.log(response)
     const tokenPayload: TokenPayload = {
       userId: user.id
     }
@@ -21,16 +22,32 @@ export class AppService {
     expires.setSeconds(
       expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
     );
-
     const token = this.jwtService.sign(tokenPayload);
 
-    response.cookie('Authentication', token, {
+    response.cookie('Authorization', token, {
       httpOnly: true,
       expires,
     });
 
-    response.setHeader('Authentication', `bearer ${token}`)
+    response.setHeader('Authorization', `bearer ${token}`)
 
     return token;
+  }
+
+  asyncLogin(user: UserEntity) {
+    const tokenPayload: TokenPayload = {
+      userId: user.id
+    }
+
+    const expires = new Date();
+    expires.setSeconds(
+      expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
+    );
+    const token = this.jwtService.sign(tokenPayload);
+
+    return {
+      user,
+      token
+    };
   }
 }

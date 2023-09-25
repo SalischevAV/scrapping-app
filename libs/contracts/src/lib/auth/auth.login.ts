@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { TokenPayload } from '@scraping-app/interfaces';
+import { CreateUserDto } from '@scraping-app/dtos';
 import { UserEntity } from '@scraping-app/models';
 
-export namespace AuthAuthorize {
+export namespace AuthLogin {
     export const queue = 'auth';
 
-	export const topic = 'auth.authorize.command';
+	export const topic = 'auth.login.command';
 
     export const injectionToken = 'auth';
 
-	export class Request {
-        Authorization : TokenPayload
-    
-	}
+	export class Request extends CreateUserDto{}
 
 	export class Response {
 		user: UserEntity;
