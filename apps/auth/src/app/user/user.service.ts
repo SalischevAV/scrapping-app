@@ -1,7 +1,7 @@
 import { CREDENTIALS_ARE_INVALID, USER_ALREADY_EXISTS } from '@scraping-app/constants';
 import { UserRepository } from './user.repository';
 import { Injectable, Logger, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
-import { CreateUserDto, GetUserDto } from '@scraping-app/dtos';
+import { CreateUserDto, GetUserDto, UpdateUserDto } from '@scraping-app/dtos';
 import { UserEntity } from '@scraping-app/models';
 import * as bcrypt from 'bcryptjs';
  
@@ -39,7 +39,11 @@ export class UserService {
             }
             return user;
         }
-        
+        async updateUser(user: UpdateUserDto){
+            const updatedUser = new UserEntity(user);
+            return await this.userRepository.findOneAndUpdate({id: updatedUser.id}, updatedUser);
+        }
+
         async getUsers() {
             return this.userRepository.find({});
         }

@@ -8,4 +8,10 @@ export class UserEntity extends AbstractEntity<UserEntity>{
 
     @Column()
     passwordHash: string;
+
+    @Column({nullable: true})
+    accessToken?: string;
+    
+    @Column({nullable: true})
+    refreshToken?: string;
 }

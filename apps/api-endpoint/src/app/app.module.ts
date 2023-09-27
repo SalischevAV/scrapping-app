@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import {  AuthRegister } from '@scraping-app/libs/contracts';
+import {  AuthRegister, ScrappingScrapping } from '@scraping-app/libs/contracts';
 import { AuthController } from './controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ScrappingController } from './controllers/scrapping.contriller';
@@ -21,6 +21,17 @@ import { ScrappingController } from './controllers/scrapping.contriller';
           options: {
             urls: [configService.getOrThrow<string>('RMQ_HOST')],
             queue: AuthRegister.queue,
+          }
+        }),
+        inject: [ConfigService],
+      },
+      {
+        name: ScrappingScrapping.injectionToken,
+        useFactory: (configService: ConfigService) =>({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.getOrThrow<string>('RMQ_HOST')],
+            queue: ScrappingScrapping.queue,
           }
         }),
         inject: [ConfigService],

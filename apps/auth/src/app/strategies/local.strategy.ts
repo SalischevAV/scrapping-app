@@ -19,8 +19,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(request: Request, email: string, password: string) {
-        const contextId = ContextIdFactory.getByRequest(request);
-        console.log(contextId)
         try {
             return await this.userService.verifyUser(email, password);          
         } catch (error) {
