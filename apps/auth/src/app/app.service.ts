@@ -1,3 +1,4 @@
+import { UserService } from './user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '@scraping-app/models';
@@ -10,10 +11,10 @@ export class AppService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ){}
 
   login(user: UserEntity, response: Response) {
-    console.log(response)
     const tokenPayload: TokenPayload = {
       userId: user.id
     }
@@ -34,7 +35,7 @@ export class AppService {
     return token;
   }
 
-  asyncLogin(user: UserEntity) {
+  async asyncLogin(user: UserEntity) {
     const tokenPayload: TokenPayload = {
       userId: user.id
     }
@@ -44,9 +45,13 @@ export class AppService {
       expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
     );
     const token = this.jwtService.sign(tokenPayload);
+    const userWithToken = await this.userService.updateUser({
+      ...user,
+        accessToken: token,
+    })
 
     return {
-      user,
+      user: userWithToken,
       token
     };
   }

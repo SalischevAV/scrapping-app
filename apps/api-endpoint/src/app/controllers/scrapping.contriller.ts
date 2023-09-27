@@ -1,30 +1,25 @@
-import { Body, Controller, Inject, Post, UnauthorizedException } from "@nestjs/common";
+import { Controller, Get, Inject, Query, UseGuards } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { CreateUserDto } from "@scraping-app/dtos";
-import { AuthLogin, AuthRegister } from "@scraping-app/libs/contracts";
+import { CommonJwtAuthGuard } from "@scraping-app/libs/auth";
+import { ScrappingScrapping } from "@scraping-app/libs/contracts";
+import { UserEntity } from "@scraping-app/models";
+import { CurrentUser } from "@scraping-app/nest-decorators";
 import { firstValueFrom } from "rxjs";
 
-@Controller('auth')
+@Controller('scrapping')
 export class ScrappingController {
     constructor(
-        @Inject(AuthRegister.injectionToken) private readonly authService: ClientProxy,
+        @Inject(ScrappingScrapping.injectionToken) private readonly scrappingService: ClientProxy,
     ) { }
 
-    @Post('register')
-    async register(@Body() createUserDto: CreateUserDto) {
+    @UseGuards(CommonJwtAuthGuard)
+    @Get('scrapping')
+    async scrappingRequest(@Query('productQuery') productQuery, @Query('url') url,  @CurrentUser() currentUser: UserEntity) {
         return await firstValueFrom(
-            this.authService.send<AuthRegister.Response, AuthRegister.Request>(AuthRegister.topic, createUserDto)
+            this.scrappingService.send<ScrappingScrapping.Response, ScrappingScrapping.Request>(
+                ScrappingScrapping.topic,
+                { productQuery, url, Authorization: currentUser.accessToken }
+            )
         )
-    }
-
-    @Post('login')
-    async login(@Body() createUserDto: CreateUserDto) {
-       try {
-        return await firstValueFrom(
-            this.authService.send<AuthLogin.Response, AuthLogin.Request>(AuthLogin.topic, createUserDto)
-        )
-       } catch (error) {
-            throw new UnauthorizedException()
-       }
     }
 }

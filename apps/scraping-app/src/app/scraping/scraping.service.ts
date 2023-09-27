@@ -57,7 +57,7 @@ export class ScrapingService {
        }
     }
     saveResult(userId: number) {
-      console.log(userId);
+      this.logger.log(userId)
     }
 
     getResults(productQuery: string, url: string) {
